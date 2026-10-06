@@ -1,0 +1,8 @@
+node_modules/
+.pnpm-store/
+dist/
+.DS_Store
+*.log
+.vite/
+public/pdf.worker.min.mjs
+public/fonts/

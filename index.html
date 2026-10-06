@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c1118" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23dcff7e'/%3E%3Cpath d='M20 13h17l10 10v28H20zM37 13v11h10M27 32h13M27 40h10' fill='none' stroke='%23142006' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <meta
+      name="description"
+      content="Convierte un PDF local en una presentación a pantalla completa sin subirlo a Internet."
+    />
+    <title>Presenta PDF</title>
+  </head>
+  <body>
+    <svg class="svg-sprite" aria-hidden="true">
+      <symbol id="icon-file" viewBox="0 0 24 24">
+        <path d="M6.75 2.75h6.8l3.7 3.7v14.8H6.75z" />
+        <path d="M13.25 2.9v3.8h3.8M9 11.2h6M9 14.5h6M9 17.8h4" />
+      </symbol>
+      <symbol id="icon-upload" viewBox="0 0 24 24">
+        <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v5h14v-5" />
+      </symbol>
+      <symbol id="icon-left" viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7" /></symbol>
+      <symbol id="icon-right" viewBox="0 0 24 24"><path d="m9.5 5 7 7-7 7" /></symbol>
+      <symbol id="icon-grid" viewBox="0 0 24 24">
+        <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1" /><rect x="14" y="3.5" width="6.5" height="6.5" rx="1" />
+        <rect x="3.5" y="14" width="6.5" height="6.5" rx="1" /><rect x="14" y="14" width="6.5" height="6.5" rx="1" />
+      </symbol>
+      <symbol id="icon-fit" viewBox="0 0 24 24">
+        <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5M8 12h8" />
+      </symbol>
+      <symbol id="icon-expand" viewBox="0 0 24 24">
+        <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" />
+      </symbol>
+      <symbol id="icon-pointer" viewBox="0 0 24 24"><path d="m5 3 13.5 9.2-6.2 1.1-3.4 5.3z" /></symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 7v5l3 2" /></symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z" /></symbol>
+      <symbol id="icon-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14" /></symbol>
+      <symbol id="icon-reset" viewBox="0 0 24 24"><path d="M5.2 8A8 8 0 1 1 4 13M5.2 8V3.5M5.2 8h4.5" /></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></symbol>
+      <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></symbol>
+    </svg>
+
+    <main id="app" class="app-shell">
+      <section id="welcome-screen" class="welcome" aria-labelledby="welcome-title">
+        <header class="brand" aria-label="Presenta PDF">
+          <span class="brand-mark"><svg><use href="#icon-file" /></svg></span>
+          <span>Presenta PDF</span>
+          <span class="local-badge">100% local</span>
+        </header>
+
+        <div class="welcome-copy">
+          <p class="eyebrow">Del archivo a la pantalla, en segundos</p>
+          <h1 id="welcome-title">Tu PDF.<br /><span>Listo para presentar.</span></h1>
+          <p class="welcome-lede">
+            Cada página se convierte en una diapositiva nítida, sin subir el documento ni instalar nada.
+          </p>
+        </div>
+
+        <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-describedby="privacy-note">
+          <input id="file-input" type="file" accept="application/pdf,.pdf" hidden />
+          <div class="drop-icon" aria-hidden="true"><svg><use href="#icon-upload" /></svg></div>
+          <div class="drop-text">
+            <strong>Arrastra un PDF aquí</strong>
+            <span>o selecciónalo desde tu equipo</span>
+          </div>
+          <button id="select-file-button" class="primary-button" type="button">Seleccionar PDF</button>
+          <p id="drop-hint" class="drop-hint">También puedes soltarlo en cualquier lugar de esta ventana</p>
+        </div>
+
+        <p id="privacy-note" class="privacy-note">
+          <span class="privacy-dot" aria-hidden="true"></span>
+          Tu archivo no se sube a Internet. Todo se procesa localmente en este navegador.
+        </p>
+      </section>
+
+      <section id="presentation-screen" class="presentation" aria-label="Presentación PDF" hidden>
+        <header class="presentation-header">
+          <div class="document-meta">
+            <span class="document-icon"><svg><use href="#icon-file" /></svg></span>
+            <div>
+              <strong id="document-name">Documento</strong>
+              <span id="document-meta">PDF local</span>
+            </div>
+          </div>
+          <div class="header-actions">
+            <span class="private-chip"><span></span>Privado · local</span>
+            <button id="open-file-header" class="text-button" type="button">Abrir otro PDF</button>
+            <button id="present-button" class="present-button" type="button">
+              <svg><use href="#icon-expand" /></svg> Presentar
+            </button>
+          </div>
+        </header>
+
+        <div class="presentation-workspace">
+          <aside id="thumbnail-panel" class="thumbnail-panel" aria-label="Miniaturas" aria-hidden="true">
+            <div class="thumbnail-heading">
+              <div><span>Páginas</span><strong id="thumbnail-count">0</strong></div>
+              <button id="close-thumbnails" class="icon-button" type="button" aria-label="Cerrar miniaturas">
+                <svg><use href="#icon-close" /></svg>
+              </button>
+            </div>
+            <div id="thumbnail-list" class="thumbnail-list"></div>
+          </aside>
+
+          <div id="stage" class="stage" tabindex="0" aria-label="Diapositiva actual">
+            <div id="canvas-scroll" class="canvas-scroll fit-page">
+              <div id="canvas-frame" class="canvas-frame">
+                <canvas id="pdf-canvas" aria-label="Página del PDF"></canvas>
+              </div>
+            </div>
+
+            <div id="loading-indicator" class="loading-indicator" role="status" aria-live="polite" hidden>
+              <span class="spinner" aria-hidden="true"></span>
+              <span id="loading-text">Preparando página…</span>
+            </div>
+
+            <div id="blank-screen" class="blank-screen" aria-live="polite" hidden>
+              <span id="blank-label">Pantalla negra</span>
+            </div>
+
+            <div id="laser-pointer" class="laser-pointer" aria-hidden="true"></div>
+            <div id="pointer-indicator" class="mode-indicator" hidden>
+              <span></span>Puntero activo <kbd>P</kbd>
+            </div>
+
+            <div id="timer-popover" class="timer-popover" hidden>
+              <span>Temporizador</span>
+              <div class="timer-popover-actions">
+                <button id="timer-toggle" class="icon-button" type="button" aria-label="Iniciar temporizador">
+                  <svg><use id="timer-toggle-icon" href="#icon-play" /></svg>
+                </button>
+                <button id="timer-reset" class="icon-button" type="button" aria-label="Reiniciar temporizador">
+                  <svg><use href="#icon-reset" /></svg>
+                </button>
+              </div>
+            </div>
+
+            <nav id="control-bar" class="control-bar" aria-label="Controles de presentación">
+              <div class="control-group navigation-controls">
+                <button id="previous-page" class="icon-button" type="button" aria-label="Página anterior" title="Página anterior (←)">
+                  <svg><use href="#icon-left" /></svg>
+                </button>
+                <div class="page-control" aria-label="Página actual">
+                  <input id="page-input" type="number" min="1" value="1" inputmode="numeric" aria-label="Ir a página" />
+                  <span aria-hidden="true">/</span>
+                  <span id="page-total">1</span>
+                </div>
+                <button id="next-page" class="icon-button" type="button" aria-label="Página siguiente" title="Página siguiente (→)">
+                  <svg><use href="#icon-right" /></svg>
+                </button>
+              </div>
+
+              <span class="control-divider" aria-hidden="true"></span>
+
+              <div class="control-group">
+                <button id="toggle-thumbnails" class="icon-button" type="button" aria-label="Mostrar miniaturas" aria-expanded="false" title="Miniaturas (T)">
+                  <svg><use href="#icon-grid" /></svg>
+                </button>
+                <button id="fit-button" class="labeled-control" type="button" aria-label="Cambiar modo de ajuste" title="Cambiar modo de ajuste">
+                  <svg><use href="#icon-fit" /></svg><span id="fit-label">Ajustar</span>
+                </button>
+              </div>
+
+              <div class="zoom-control" aria-label="Zoom">
+                <button id="zoom-out" type="button" aria-label="Alejar" title="Alejar (-)">−</button>
+                <button id="zoom-value" type="button" aria-label="Zoom actual; volver a ajustar"><span>100%</span></button>
+                <button id="zoom-in" type="button" aria-label="Acercar" title="Acercar (+)">+</button>
+              </div>
+
+              <span class="control-divider optional-divider" aria-hidden="true"></span>
+
+              <div class="control-group optional-controls">
+                <button id="pointer-button" class="icon-button" type="button" aria-label="Activar puntero" aria-pressed="false" title="Puntero (P)">
+                  <svg><use href="#icon-pointer" /></svg>
+                </button>
+                <button id="timer-button" class="timer-button" type="button" aria-label="Opciones del temporizador" aria-expanded="false">
+                  <svg><use href="#icon-clock" /></svg><span id="timer-display">00:00:00</span>
+                </button>
+                <button id="fullscreen-button" class="icon-button emphasized" type="button" aria-label="Pantalla completa" title="Pantalla completa (F)">
+                  <svg><use href="#icon-expand" /></svg>
+                </button>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="password-dialog" class="app-dialog" aria-labelledby="password-title">
+      <form id="password-form" method="dialog">
+        <div class="dialog-icon"><svg><use href="#icon-lock" /></svg></div>
+        <h2 id="password-title">PDF protegido</h2>
+        <p id="password-description">Introduce la contraseña. Se usará solo en memoria y nunca se guardará.</p>
+        <label for="password-input">Contraseña</label>
+        <input id="password-input" type="password" autocomplete="off" />
+        <p id="password-error" class="field-error" role="alert" hidden>La contraseña no es correcta.</p>
+        <div class="dialog-actions">
+          <button id="password-cancel" class="secondary-button" type="button">Cancelar</button>
+          <button class="primary-button" type="submit">Abrir PDF</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="error-dialog" class="app-dialog" aria-labelledby="error-title">
+      <div class="dialog-icon error-icon" aria-hidden="true">!</div>
+      <h2 id="error-title">No pudimos abrir el PDF</h2>
+      <p id="error-message"></p>
+      <div class="dialog-actions">
+        <button id="error-close" class="primary-button" type="button">Entendido</button>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

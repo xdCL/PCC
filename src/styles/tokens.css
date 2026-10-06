@@ -1,0 +1,27 @@
+:root {
+  color-scheme: dark;
+  --ink-950: #0c1118;
+  --ink-900: #111820;
+  --ink-800: #1a242f;
+  --ink-700: #26323f;
+  --ink-600: #53606c;
+  --ink-500: #727c84;
+  --ink-400: #919ba4;
+  --ink-300: #abb3ba;
+  --ink-200: #d4d9dd;
+  --ink-100: #f1f3f4;
+  --paper: #f8f8f3;
+  --accent: #dcff7e;
+  --accent-hover: #e6ff9e;
+  --accent-strong: #83ad18;
+  --accent-ink: #142006;
+  --focus: #a8d84a;
+  --line-dark: rgb(255 255 255 / 10%);
+  --line-light: rgb(13 21 30 / 16%);
+  --font-sans: 'Plus Jakarta Sans Variable', 'Segoe UI Variable', 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  --header-height: 3.65rem;
+  --thumbnail-width: 13rem;
+  --transition-duration: 130ms;
+}
