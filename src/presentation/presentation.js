@@ -5,6 +5,7 @@ import { clamp, debounce, formatFileSize, nextFrame, safeFileName } from '../uti
 import { setupKeyboard } from './keyboard.js';
 import { toggleFullscreen, onFullscreenChange } from './fullscreen.js';
 import { setupGestures } from './gestures.js';
+import { CanvasPan } from './pan.js';
 import { LaserPointer } from './pointer.js';
 import { PresentationTimer } from './timer.js';
 
@@ -51,6 +52,7 @@ export class PresentationController {
         if (window.innerWidth < 650) this.setThumbnails(false);
       },
     });
+    this.pan = new CanvasPan(this.canvasScroll, document.querySelector('#canvas-frame'));
     this.pointer = new LaserPointer(
       this.stage,
       document.querySelector('#laser-pointer'),
@@ -122,13 +124,14 @@ export class PresentationController {
 
     this.documentName.textContent = safeFileName(file.name);
     this.documentMeta.textContent = `${this.totalPages} ${this.totalPages === 1 ? 'página' : 'páginas'} · ${formatFileSize(file.size)}`;
-    document.title = `${safeFileName(file.name)} · Presenta PDF`;
+    document.title = `${safeFileName(file.name)} · PresentaCualquierCosa`;
     this.blankScreen.hidden = true;
     this.renderer.setDocument(pdfDocument);
     this.thumbnails.setDocument(pdfDocument);
     this.thumbnails.setCurrent(1);
     this.setThumbnails(false);
     this.pointer.setActive(false);
+    this.pan.setEnabled(true);
     this.controls.setPointer(false);
     this.controls.setPage(1, this.totalPages);
     this.controls.setView(this.viewMode, this.zoom);
@@ -159,6 +162,7 @@ export class PresentationController {
     if (!this.currentDocument) return;
     try {
       await this.renderer.render(this.currentPage, { transition });
+      this.pan.refresh();
     } catch (error) {
       console.error(error);
       this.dialogs.error('Ocurrió un error al preparar esta página. Intenta cambiar de página o volver a abrir el PDF.');
@@ -237,6 +241,7 @@ export class PresentationController {
 
   togglePointer() {
     const active = this.pointer.toggle();
+    this.pan.setEnabled(!active);
     this.controls.setPointer(active);
     this.dialogs.toast(active ? 'Puntero activado · pulsa P para desactivarlo' : 'Puntero desactivado', 1800);
   }
@@ -299,6 +304,7 @@ export class PresentationController {
     this.removeKeyboard?.();
     this.removeGestures?.();
     this.removeFullscreenListener?.();
+    this.pan.destroy();
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('orientationchange', this.onResize);
     void this.closeCurrent();

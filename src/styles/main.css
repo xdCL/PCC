@@ -106,9 +106,14 @@ svg {
   grid-column: 1 / -1;
   align-items: center;
   gap: 0.7rem;
-  font-size: 1rem;
+  font-size: clamp(0.82rem, 2.8vw, 1rem);
   font-weight: 750;
   letter-spacing: -0.02em;
+}
+
+.brand-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .brand-mark {
@@ -492,6 +497,20 @@ svg {
   align-items: flex-start;
 }
 
+.canvas-scroll.is-pannable {
+  cursor: grab;
+  overscroll-behavior: contain;
+}
+
+.canvas-scroll.is-pannable-x {
+  justify-content: flex-start;
+}
+
+.canvas-scroll.is-panning {
+  cursor: grabbing;
+  user-select: none;
+}
+
 .canvas-frame {
   position: relative;
   display: flex;
@@ -592,6 +611,10 @@ svg {
 }
 
 .stage.pointer-active {
+  cursor: none;
+}
+
+.stage.pointer-active .canvas-scroll {
   cursor: none;
 }
 

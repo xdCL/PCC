@@ -1,8 +1,8 @@
-# Presenta PDF
+# PresentaCualquierCosa
 
 Convierte cualquier PDF local en una presentación a pantalla completa directamente desde tu navegador.
 
-Presenta PDF es una aplicación web estática pensada para proyectar documentos sin pasos intermedios: arrastra un PDF, espera unos segundos y presenta cada página como una diapositiva. No necesita cuenta, backend ni servicios externos.
+PresentaCualquierCosa es una aplicación web estática pensada para proyectar documentos sin pasos intermedios: arrastra un PDF, espera unos segundos y presenta cada página como una diapositiva. No necesita cuenta, backend ni servicios externos.
 
 ## Privacidad
 
@@ -17,6 +17,7 @@ El documento se lee con la File API del navegador y se interpreta localmente con
 - Navegación por teclado y selector de página.
 - Miniaturas con renderizado diferido.
 - Ajuste a pantalla, ajuste al ancho y zoom manual.
+- Herramienta de mano contextual para arrastrar páginas ampliadas o ajustadas al ancho.
 - Puntero láser virtual.
 - Temporizador con inicio, pausa y reinicio.
 - Pantalla negra o blanca sin cambiar de página.
@@ -96,6 +97,7 @@ src/
 │  ├─ keyboard.js                  # Atajos
 │  ├─ fullscreen.js                # Fullscreen API
 │  ├─ gestures.js                  # Swipe táctil
+│  ├─ pan.js                       # Arrastre con herramienta de mano
 │  ├─ pointer.js                   # Puntero virtual
 │  └─ timer.js                     # Temporizador en memoria
 ├─ ui/
