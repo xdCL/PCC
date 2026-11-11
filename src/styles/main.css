@@ -105,10 +105,36 @@ svg {
   display: flex;
   grid-column: 1 / -1;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.7rem;
   font-size: clamp(0.82rem, 2.8vw, 1rem);
   font-weight: 750;
   letter-spacing: -0.02em;
+}
+
+.home-link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid currentColor;
+  border-radius: 0.55rem;
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-link:hover {
+  background: rgb(128 128 128 / 12%);
+}
+
+.brand .home-link {
+  margin-left: auto;
 }
 
 .brand-name {
@@ -1167,8 +1193,25 @@ html:-webkit-full-screen::backdrop,
 }
 
 @media (max-width: 650px) {
+  .brand .home-link {
+    margin-left: 0;
+  }
+
+  .presentation-header .document-icon {
+    display: none;
+  }
+
+  .presentation-header .document-meta {
+    flex: 1;
+  }
+
+  .presentation-header .document-meta strong {
+    max-width: 100%;
+  }
+
   .presentation-header {
     padding: 0 0.65rem;
+    gap: 0.5rem;
   }
 
   .header-actions .text-button {

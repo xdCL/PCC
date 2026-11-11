@@ -1,5 +1,7 @@
 # PresentaCualquierCosa
 
+**[← Volver al inicio · xdCL](https://xdcl.github.io/)**
+
 Convierte cualquier PDF local en una presentación a pantalla completa directamente desde tu navegador.
 
 PresentaCualquierCosa es una aplicación web estática pensada para proyectar documentos sin pasos intermedios: arrastra un PDF, espera unos segundos y presenta cada página como una diapositiva. No necesita cuenta, backend ni servicios externos.
