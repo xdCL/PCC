@@ -56,7 +56,7 @@ export class PdfRenderer {
     this.onLoadingChange?.(false);
   }
 
-  async render(pageNumber, { transition = true } = {}) {
+  async render(pageNumber, { transition = true, direction = 'forward' } = {}) {
     if (!this.document) return;
 
     const token = ++this.renderToken;
@@ -77,7 +77,7 @@ export class PdfRenderer {
       const cached = this.cache.get(key);
 
       if (cached) {
-        this.present(cached, transition);
+        this.present(cached, transition, direction);
       } else {
         const rendered = await this.renderPageToCanvas(page, metrics, 'main');
         if (!rendered || token !== this.renderToken) {
@@ -85,7 +85,7 @@ export class PdfRenderer {
           return;
         }
         this.cache.set(key, rendered);
-        this.present(rendered, transition);
+        this.present(rendered, transition, direction);
       }
 
       window.clearTimeout(this.loadingTimer);
@@ -186,7 +186,7 @@ export class PdfRenderer {
     }
   }
 
-  present(entry, transition) {
+  present(entry, transition, direction = 'forward') {
     this.canvas.width = entry.canvas.width;
     this.canvas.height = entry.canvas.height;
     this.canvas.style.width = `${entry.cssWidth}px`;
@@ -196,10 +196,12 @@ export class PdfRenderer {
     const context = this.canvas.getContext('2d', { alpha: false });
     context.drawImage(entry.canvas, 0, 0);
 
-    this.canvas.classList.remove('page-enter');
+    this.canvas.classList.remove('page-enter-forward', 'page-enter-backward');
     if (transition) {
       void this.canvas.offsetWidth;
-      this.canvas.classList.add('page-enter');
+      this.canvas.classList.add(
+        direction === 'backward' ? 'page-enter-backward' : 'page-enter-forward',
+      );
     }
   }
 

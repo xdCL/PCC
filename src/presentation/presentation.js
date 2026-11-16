@@ -10,9 +10,10 @@ import { LaserPointer } from './pointer.js';
 import { PresentationTimer } from './timer.js';
 
 export class PresentationController {
-  constructor({ dialogs, onOpenFile }) {
+  constructor({ dialogs, onOpenFile, onReturnHome }) {
     this.dialogs = dialogs;
     this.onOpenFile = onOpenFile;
+    this.onReturnHome = onReturnHome;
     this.screen = document.querySelector('#presentation-screen');
     this.welcome = document.querySelector('#welcome-screen');
     this.stage = document.querySelector('#stage');
@@ -34,6 +35,7 @@ export class PresentationController {
     this.blankMode = null;
     this.viewBeforeFullscreen = null;
     this.active = false;
+    this.presentationMode = 'slides';
 
     this.controls = new Controls(this.stage);
     this.renderer = new PdfRenderer({
@@ -90,6 +92,7 @@ export class PresentationController {
       togglePointer: () => this.togglePointer(),
       present: () => void this.present(),
       openFile: this.onOpenFile,
+      exit: () => void this.returnHome(),
       toggleTimer: () => this.timer.toggle(),
       resetTimer: () => this.timer.reset(),
     });
@@ -112,8 +115,12 @@ export class PresentationController {
     };
   }
 
-  async open(pdfDocument, file) {
+  async open(pdfDocument, file, { mode = 'slides' } = {}) {
     await this.closeCurrent();
+    this.timer.pause();
+    this.timer.reset();
+    this.controls.toggleTimerPopover(false);
+    this.presentationMode = mode === 'document' ? 'document' : 'slides';
     this.currentDocument = pdfDocument;
     this.currentPage = 1;
     this.totalPages = pdfDocument.numPages;
@@ -123,7 +130,10 @@ export class PresentationController {
     this.active = true;
 
     this.documentName.textContent = safeFileName(file.name);
-    this.documentMeta.textContent = `${this.totalPages} ${this.totalPages === 1 ? 'página' : 'páginas'} · ${formatFileSize(file.size)}`;
+    const pageLabel = this.presentationMode === 'slides'
+      ? (this.totalPages === 1 ? 'diapositiva' : 'diapositivas')
+      : (this.totalPages === 1 ? 'página' : 'páginas');
+    this.documentMeta.textContent = `${this.totalPages} ${pageLabel} · ${formatFileSize(file.size)}`;
     document.title = `${safeFileName(file.name)} · PresentaCualquierCosa`;
     this.blankScreen.hidden = true;
     this.renderer.setDocument(pdfDocument);
@@ -145,6 +155,37 @@ export class PresentationController {
     this.controls.reveal();
   }
 
+  async returnHome() {
+    if (!this.active) return;
+    this.active = false;
+    this.onReturnHome?.();
+    this.timer.pause();
+    this.timer.reset();
+    this.controls.toggleTimerPopover(false);
+    this.pointer.setActive(false);
+    this.pan.setEnabled(true);
+    this.controls.setPointer(false);
+    this.blankMode = null;
+    this.blankScreen.hidden = true;
+    this.stage.classList.remove('controls-hidden');
+    this.setThumbnails(false);
+
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      try {
+        await toggleFullscreen(document.documentElement);
+      } catch (error) {
+        console.warn('No se pudo salir del modo de pantalla completa.', error);
+      }
+    }
+
+    this.screen.classList.remove('is-fullscreen');
+    this.screen.hidden = true;
+    this.welcome.hidden = false;
+    document.title = 'PresentaCualquierCosa';
+    await this.closeCurrent();
+    document.querySelector('#select-file-button')?.focus({ preventScroll: true });
+  }
+
   async closeCurrent() {
     if (!this.currentDocument) return;
     const oldDocument = this.currentDocument;
@@ -158,10 +199,13 @@ export class PresentationController {
     }
   }
 
-  async renderCurrent(transition = true) {
+  async renderCurrent(transition = true, direction = 'forward') {
     if (!this.currentDocument) return;
     try {
-      await this.renderer.render(this.currentPage, { transition });
+      await this.renderer.render(this.currentPage, {
+        transition: transition && this.presentationMode === 'slides',
+        direction,
+      });
       this.pan.refresh();
     } catch (error) {
       console.error(error);
@@ -179,10 +223,11 @@ export class PresentationController {
       this.controls.setPage(this.currentPage, this.totalPages);
       return;
     }
+    const direction = target > this.currentPage ? 'forward' : 'backward';
     this.currentPage = target;
     this.controls.setPage(target, this.totalPages);
     this.thumbnails.setCurrent(target, true);
-    void this.renderCurrent(true);
+    void this.renderCurrent(true, direction);
   }
 
   next() {
@@ -273,6 +318,7 @@ export class PresentationController {
   }
 
   async handleFullscreenChange(isFullscreen) {
+    if (!this.active) return;
     this.screen.classList.toggle('is-fullscreen', isFullscreen);
     if (isFullscreen) {
       this.setThumbnails(false);
@@ -289,6 +335,7 @@ export class PresentationController {
     this.controls.setView(this.viewMode, this.zoom);
     await nextFrame();
     await nextFrame();
+    if (!this.active) return;
     this.renderer.invalidate();
     void this.renderCurrent(false);
     this.controls.reveal();
@@ -301,6 +348,7 @@ export class PresentationController {
 
   destroy() {
     this.active = false;
+    this.timer.pause();
     this.removeKeyboard?.();
     this.removeGestures?.();
     this.removeFullscreenListener?.();

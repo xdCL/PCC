@@ -4,7 +4,7 @@
 
 Convierte cualquier PDF local en una presentación a pantalla completa directamente desde tu navegador.
 
-PresentaCualquierCosa es una aplicación web estática pensada para proyectar documentos sin pasos intermedios: arrastra un PDF, espera unos segundos y presenta cada página como una diapositiva. No necesita cuenta, backend ni servicios externos.
+PresentaCualquierCosa es una aplicación web estática pensada para proyectar documentos de forma sencilla: arrastra un PDF y elige presentarlo como diapositivas o abrirlo como documento. No necesita cuenta, backend ni servicios externos. La opción de diapositivas presenta cada página como una lámina independiente; **no convierte ni modifica el PDF original**.
 
 ## Privacidad
 
@@ -15,6 +15,10 @@ El documento se lee con la File API del navegador y se interpreta localmente con
 ## Características
 
 - Arrastrar y soltar o seleccionar un PDF.
+- Elección al abrir: **Convertir en diapositivas** (cada página es una diapositiva) o **Abrir como documento**.
+- Transición direccional suave entre diapositivas al avanzar o retroceder, respetando la preferencia de movimiento reducido.
+- Botón **Salir** en el visor y en su barra flotante para volver al inicio de PCC, incluso desde pantalla completa.
+- Enlace a la portada de xdCL solo en el inicio de PCC.
 - Presentación nítida a pantalla completa.
 - Navegación por teclado y selector de página.
 - Miniaturas con renderizado diferido.
@@ -71,7 +75,7 @@ Los scripts `predev` y `prebuild` copian automáticamente el worker de PDF.js y 
 | Zoom + | `+` |
 | Zoom - | `-` |
 
-`Escape` conserva su comportamiento nativo para salir de pantalla completa o cerrar un diálogo.
+`Escape` conserva su comportamiento nativo para salir de pantalla completa o cerrar un diálogo. Para volver al inicio de PCC y cerrar el documento cargado usa **Salir**. En pantalla completa, mueve el cursor para revelar la barra de controles y selecciona el ícono de salida.
 
 ## Despliegue en GitHub Pages
 
@@ -115,7 +119,7 @@ La página actual se renderiza con una resolución interna proporcional a `devic
 
 ## Comprobación manual recomendada
 
-Prueba al menos un PDF vertical, uno horizontal y un documento largo. Comprueba navegación con teclado, cambio de tamaño, miniaturas, zoom, puntero, pantallas negra/blanca y entrada/salida de fullscreen. Las herramientas de red del navegador no deben mostrar ninguna transferencia del PDF: después de cargar los archivos estáticos, el procesamiento es totalmente local.
+Prueba al menos un PDF vertical, uno horizontal y un documento largo. Comprueba ambos modos de apertura, cancelar la elección, navegar hacia adelante y atrás con teclado/gestos, las transiciones y la preferencia de movimiento reducido. Verifica el retorno con **Salir** desde el visor y desde pantalla completa, y que el enlace a xdCL solo aparezca en la portada. Comprueba además cambio de tamaño, miniaturas, zoom, puntero, pantallas negra/blanca y entrada/salida de fullscreen. Las herramientas de red del navegador no deben mostrar ninguna transferencia del PDF: después de cargar los archivos estáticos, el procesamiento es totalmente local.
 
 ## Licencia
 
