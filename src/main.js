@@ -16,6 +16,13 @@ let loadGeneration = 0;
 const presentation = new PresentationController({
   dialogs,
   onOpenFile: () => fileInput.click(),
+  onReturnHome: () => {
+    loadGeneration += 1;
+    fileInput.value = '';
+    selectButton.disabled = false;
+    selectButton.textContent = 'Seleccionar PDF';
+    dropZone.classList.remove('is-loading', 'is-dragging');
+  },
 });
 
 function chooseFile() {
@@ -51,7 +58,16 @@ async function openFile(file) {
       await pdfDocument.destroy();
       return;
     }
-    await presentation.open(pdfDocument, file);
+    if (presentation.active) presentation.setLoading(false);
+    const mode = await dialogs.requestPresentationMode({
+      fileName: file.name,
+      pageCount: pdfDocument.numPages,
+    });
+    if (generation !== loadGeneration || !mode) {
+      await pdfDocument.destroy();
+      return;
+    }
+    await presentation.open(pdfDocument, file, { mode });
   } catch (error) {
     if (generation !== loadGeneration) return;
     console.error(error);
