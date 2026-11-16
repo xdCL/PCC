@@ -19,6 +19,8 @@ export class Controls {
       fullscreen: document.querySelector('#fullscreen-button'),
       present: document.querySelector('#present-button'),
       openFile: document.querySelector('#open-file-header'),
+      exit: document.querySelector('#exit-presentation'),
+      exitToolbar: document.querySelector('#exit-presentation-toolbar'),
       timer: document.querySelector('#timer-button'),
       timerDisplay: document.querySelector('#timer-display'),
       timerPopover: document.querySelector('#timer-popover'),
@@ -45,6 +47,8 @@ export class Controls {
     el.fullscreen.addEventListener('click', actions.present);
     el.present.addEventListener('click', actions.present);
     el.openFile.addEventListener('click', actions.openFile);
+    el.exit.addEventListener('click', actions.exit);
+    el.exitToolbar.addEventListener('click', actions.exit);
     el.timer.addEventListener('click', () => this.toggleTimerPopover());
     el.timerToggle.addEventListener('click', actions.toggleTimer);
     el.timerReset.addEventListener('click', actions.resetTimer);
